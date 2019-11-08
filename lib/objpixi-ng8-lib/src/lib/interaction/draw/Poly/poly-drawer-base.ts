@@ -12,6 +12,7 @@ export class PolyDrawerBase implements IDrawer {
   // region IDrawer Member
   OnInitialized: Subject<PIXI.DisplayObject>;
   OnRequestRender: Subject<null>;
+  AutoAccept = false;
   // endregion
 
   // region Style

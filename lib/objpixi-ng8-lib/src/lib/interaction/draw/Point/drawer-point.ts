@@ -8,6 +8,7 @@ import {IGeometry} from '../../../interface/igeometry';
 export class DrawerPoint implements IDrawer {
   OnInitialized: Subject<PIXI.DisplayObject>;
   OnRequestRender: Subject<null>;
+  AutoAccept = false;
   private point: Point;
 
   constructor() {

@@ -10,6 +10,7 @@ import {EllipseFill} from '../../../geometries/Ellipse/ellipse-fill';
 export class DrawerEllipse implements IDrawer {
   OnInitialized: Subject<PIXI.DisplayObject>;
   OnRequestRender: Subject<null>;
+  AutoAccept = true;
   defaultLineColor = 0x009688;
   ellipseStyle: IStyleEllipse = {
     fillStyle: {

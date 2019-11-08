@@ -66,6 +66,11 @@ export class DrawWizard {
 
   // region public interface
 
+  public Accept() {
+    this.OnGeometryAccepted.next(this.drawer.GetGeometry());
+    this.clear();
+  }
+
   public SetGeometryType(type: GeometryType) {
     this.clear();
     this.currentGeoType = type;
@@ -152,8 +157,7 @@ export class DrawWizard {
         this.clear();
         this.OnCancelDraw.next();
       } else {
-        this.OnGeometryAccepted.next(this.drawer.GetGeometry());
-        this.clear();
+        this.Accept();
       }
     });
   }
@@ -170,35 +174,19 @@ export class DrawWizard {
 
   private registerEvents(obj: PIXI.DisplayObject) {
     obj.addListener('tap', event1 => {
-      if (this.drawer === undefined) {
-        return;
-      }
-      this.drawer.OnEvent(event1);
-      this.acceptor.SetValidState(this.drawer.IsValid());
+      this.clickEvent(event1);
     });
     obj.addListener('click', event1 => {
-      if (this.drawer === undefined) {
-        return;
-      }
-      this.drawer.OnEvent(event1);
-      this.acceptor.SetValidState(this.drawer.IsValid());
+      this.clickEvent(event1);
     });
     obj.addListener('pointerdown', event1 => {
-      if (this.drawer === undefined) {
-        return;
-      }
-      this.drawer.OnEvent(event1);
-      this.acceptor.SetValidState(this.drawer.IsValid());
+      this.pointerUpDownEvent(event1);
+    });
+    obj.addListener('pointerup', event1 => {
+      this.pointerUpDownEvent(event1);
     });
     obj.addListener('pointermove', event1 => {
       this.positionIndicator.OnEvent(event1);
-      if (this.drawer === undefined) {
-        return;
-      }
-      this.drawer.OnEvent(event1);
-      this.acceptor.SetValidState(this.drawer.IsValid());
-    });
-    obj.addListener('pointerup', event1 => {
       if (this.drawer === undefined) {
         return;
       }
@@ -211,7 +199,28 @@ export class DrawWizard {
       }
       this.drawer.OnEvent(event1);
       this.acceptor.SetValidState(this.drawer.IsValid());
+      console.log('Right click');
     });
+  }
+
+  private clickEvent(evt: PIXI.interaction.InteractionEvent) {
+    if (this.drawer === undefined) {
+      return;
+    }
+    if (this.drawer.IsValid() && this.drawer.AutoAccept) {
+      this.Accept();
+    } else {
+      this.drawer.OnEvent(evt);
+      this.acceptor.SetValidState(this.drawer.IsValid());
+    }
+  }
+
+  private pointerUpDownEvent(evt: PIXI.interaction.InteractionEvent) {
+    if (this.drawer === undefined) {
+      return;
+    }
+    this.drawer.OnEvent(evt);
+    this.acceptor.SetValidState(this.drawer.IsValid());
   }
 
   // endregion

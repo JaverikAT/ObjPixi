@@ -12,6 +12,7 @@ export class DrawerRect implements IDrawer {
 
   OnInitialized: Subject<PIXI.DisplayObject>;
   OnRequestRender: Subject<null>;
+  AutoAccept = true;
   private rect: Rect  | RectFill;
   private dragState = false;
   private startPoint: PIXI.Point;

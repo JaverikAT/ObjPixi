@@ -9,6 +9,7 @@ import {IGeometry} from '../../../interface/igeometry';
 export class DrawerLine implements IDrawer {
   OnInitialized: Subject<PIXI.DisplayObject>;
   OnRequestRender: Subject<null>;
+  AutoAccept = true;
   private line: Line;
   private dragState = false;
   dragPointFillColor = 0xf44336;

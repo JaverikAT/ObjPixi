@@ -61,6 +61,7 @@ export class Point extends BaseGeo implements IGeometry {
       const newPos = event1.data.getLocalPosition(event1.currentTarget.parent);
       this.pointSprite.position.x = newPos.x;
       this.pointSprite.position.y = newPos.y;
+      // @ts-ignore
       this.info.position = this.pointSprite.position;
       this.OnRequestRender.next();
       this.OnChange.next({sender: this, points: this.GetPoints()});
