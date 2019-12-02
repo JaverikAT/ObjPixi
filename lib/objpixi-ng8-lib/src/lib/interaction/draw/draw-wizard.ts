@@ -29,6 +29,7 @@ export class DrawWizard {
   public OnRequestRender: Subject<null>;
   public OnGeometryAccepted: Subject<IGeometry>;
   public OnCancelDraw: Subject<any>;
+  scaleFactor = undefined;
   dragPointFillColor = 0xf44336;
   defaultLineColor = 0x009688;
   lineStyle: IStyleLine = {
@@ -51,7 +52,8 @@ export class DrawWizard {
     moveBox: false
   };
 
-  constructor(positionIndicator?: IPositionIndicator, acceptor?: IDrawAcceptor) {
+  constructor(positionIndicator?: IPositionIndicator, acceptor?: IDrawAcceptor, scaleFactor?: number) {
+    this.scaleFactor = scaleFactor;
     this.OnRequestRender = new Subject();
     this.OnGeometryAccepted = new Subject<IGeometry>();
     this.OnCancelDraw = new Subject<any>();
@@ -145,6 +147,9 @@ export class DrawWizard {
   private registerAcceptorEvents() {
     this.acceptor.OnInitialized.subscribe(obj => {
       obj.name = 'acceptor';
+      if (this.scaleFactor) {
+         obj.scale = new PIXI.Point(this.scaleFactor, this.scaleFactor);
+      }
       this.mainContainer.addChild(obj);
       this.OnRequestRender.next();
     });
@@ -164,6 +169,9 @@ export class DrawWizard {
 
   private registerIndicatorEvents() {
     this.positionIndicator.OnInitialized.subscribe(value => {
+      if (this.scaleFactor) {
+        value.scale = new PIXI.Point(this.scaleFactor, this.scaleFactor);
+      }
       this.mainContainer.addChild(value);
       this.OnRequestRender.next();
     });
