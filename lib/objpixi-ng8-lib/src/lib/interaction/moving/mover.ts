@@ -1,5 +1,8 @@
 import * as PIXI from 'pixi.js';
 import {Subject} from 'rxjs';
+import {IChangeService, VirtualResolutionChange} from '../../interface/services/ichange-service';
+import {ServiceManager, ServiceType} from '../../services/service-manager';
+import {Sizes} from '../../interface/enums/sizes.enum';
 
 export class Mover {
   private static Texture: PIXI.Texture = null;
@@ -14,6 +17,7 @@ export class Mover {
   public OnMoved: Subject<MoveDelta>;
   public OnMoveEnd: Subject<null>;
   private offsets: [number, number] = [0, 0];
+  private changeServe: IChangeService;
 
   constructor(offsets?: [number, number]) {
     this.OnRequestRender = new Subject();
@@ -22,6 +26,10 @@ export class Mover {
     if (offsets !== undefined) {
       this.offsets = offsets;
     }
+    this.changeServe = ServiceManager.GetService(ServiceType.ChangeService).service;
+    this.changeServe.Observer.subscribe(value => {
+      this.changeEvent(value);
+    })
   }
 
   public Generate(rect: PIXI.Rectangle) {
@@ -42,6 +50,20 @@ export class Mover {
     this.registerEvents();
     this.Container.addChild(this.crossSprite);
     this.OnRequestRender.next();
+  }
+
+  private changeEvent(event: VirtualResolutionChange) {
+    switch (event.size) {
+      case Sizes.Small:
+        this.crossSprite.scale = new PIXI.Point(0.2, 0.2);
+        break;
+      case Sizes.Medium:
+        this.crossSprite.scale = new PIXI.Point(0.5, 0.5);
+        break;
+      case Sizes.Big:
+        this.crossSprite.scale = new PIXI.Point(1, 1);
+        break;
+    }
   }
 
   private centerSprite() {

@@ -4,6 +4,8 @@ import {Subject} from 'rxjs';
 import {ScaleDirection} from '../../interface/enums/scale-direction.enum';
 import {ScalingDelta, ScalingEvent} from '../../interface/events/scaling-event';
 import {IScaler, ScalerInfo} from '../../interface/iscaler';
+import {ServiceManager, ServiceType} from '../../services/service-manager';
+import {IChangeService} from '../../interface/services/ichange-service';
 
 
 export interface ScalingArrows {
@@ -36,6 +38,7 @@ export class BasicScaler implements IScaler {
   public OnCreated: Subject<PIXI.DisplayObject>;
   public OnRequestRender: Subject<null>;
   public OnScaleEvent: Subject<ScalingEvent>;
+  private changeService: IChangeService;
 
   constructor() {
     this.OnRequestRender = new Subject();
@@ -46,6 +49,11 @@ export class BasicScaler implements IScaler {
       {point: new PIXI.Point(0, 0), dir: ScaleDirection.Right},
       {point: new PIXI.Point(0, 0), dir: ScaleDirection.Down},
     ];
+    ServiceManager.Observer.subscribe(value => {
+      console.log('Got service:', value.type);
+    });
+    const service = ServiceManager.GetService(ServiceType.ChangeService);
+    this.changeService = service.service;
   }
 
   private DragStates = {
