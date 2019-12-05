@@ -46,7 +46,9 @@ export class Point extends BaseGeo implements IGeometry {
       this.OnInteraction.next({event: event1, target: this});
     });
     obj.addListener('pointerdown', () => {
-      this.dragState = true;
+      if (this.enableControl) {
+        this.dragState = true;
+      }
     });
     obj.addListener('pointerup', () => {
       this.onPointerUp();
@@ -55,7 +57,7 @@ export class Point extends BaseGeo implements IGeometry {
       this.onPointerUp();
     });
     obj.addListener('pointermove', event1 => {
-      if (!this.dragState) {
+      if (!this.dragState ) {
         return;
       }
       const newPos = event1.data.getLocalPosition(event1.currentTarget.parent);

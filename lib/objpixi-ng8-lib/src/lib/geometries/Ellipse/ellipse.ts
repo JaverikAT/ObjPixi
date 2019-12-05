@@ -206,6 +206,7 @@ export class Ellipse extends BaseGeo implements IGeometry {
 
   EnableControls(state: boolean) {
     this.enableControl = state;
+    this.Label.EnableControls(state);
     if (!this.enableControl) {
       this.ClearSelection();
     }
