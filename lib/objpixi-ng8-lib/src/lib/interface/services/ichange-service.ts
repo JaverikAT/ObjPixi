@@ -9,6 +9,8 @@ export interface VirtualResolutionChange {
 
 export interface IChangeService {
   Observer: Subject<VirtualResolutionChange>;
+  CurrentSize: Sizes;
 
   ChangeSize(size: Sizes);
+  ResolutionChanged(width: number, height: number);
 }
